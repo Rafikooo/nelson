@@ -1,55 +1,76 @@
 github:
     # The name of your project on github
-    repository: your-awesome-project
+    repository: Sylius
     # The owner of the project on github
-    owner: official-owner
+    owner: Sylius
     # The owner of the user who will create pull requests with new translations
-    fork_owner: crowdin-bot
+    fork_owner: SyliusBot
     # The github token of this user
-    token: 123456789abcdef123456789abcdef123456789a
+    token: OOPSIE
     # The branches to manage.
     # {'githubBranch':'crowdinFolder'} or [branch]
     # Where branch is the same name between Github and Crowdin folder
     # Use [~] if you don't want branch management. Default: [~]
-    branches: ['master', '1.0', '2.0']
+    branches: ['1.0', '1.1', 'master']
 
 crowdin:
     # The name of your project on Crowdin
-    project: your-awesome-project
+    project: sylius
     # The key of your project on Crowdin
-    key: 123456789abcdef123456789abcdef12
+    key: OOPSIE
     # You can set a minimum to only pull full-translated languages (from 0 to 100, default: 0)
     min_translated_progress: 0
     # Only the folders listed below are used to compute the minimal translations. If you don't want this
     # feature, use ~ instead, it will compute the minimal translation with all the available folders.
-    folders: ['a_folder', 'b_folder']
+    folders: ~
     download:
-        base_dir: /tmp/nelson-download
+        base_dir: /private/tmp/nelson-download
         # By default, specific region languages are removed; mapping is done by the 2 first letters.
         # Insert here special mappings, like this:
         locale_map:
-            fr_FR: fr
-            fr_BE: fr_BE
+            zh_CN: zh_CN
+            zh_TW: zh_TW
+            de_CH: de_CH
+            sr_CS: sr_CS
+            pt_BR: pt_BR
     upload:
-        base_dir: /tmp/nelson-upload
+        base_dir: /private/tmp/nelson-upload
 
 nelson:
     # These options are passed to a Symfony Finder to find your original translation files.
     # Be careful, only select your origin language files (for example, only *.en.yml files).
     finder_options:
         in: 'src/'
-        notPath: '/not_translated_folder/'
-        path: '/Resources\/translations/'
+        notPath: '/Test/'
         name: '*.en.yml'
     # You can map your github project file paths to crowdin file paths. These next parameters are used in
     # a str_replace function.
     target_rules:
-        '/Resources/translations': ''
-        'src/YourAwesomeProject/Bundle': 'YourAwesomeProject'
+        'src/Sylius/Bundle/AddressingBundle/Resources/translations': 'AddressingBundle'
+        'src/Sylius/Bundle/AdminBundle/Resources/translations': 'AdminBundle'
+        'src/Sylius/Bundle/AttributeBundle/Resources/translations': 'AttributeBundle'
+        'src/Sylius/Bundle/ChannelBundle/Resources/translations': 'ChannelBundle'
+        'src/Sylius/Bundle/CoreBundle/Resources/translations': 'CoreBundle'
+        'src/Sylius/Bundle/CurrencyBundle/Resources/translations': 'CurrencyBundle'
+        'src/Sylius/Bundle/CustomerBundle/Resources/translations': 'CustomerBundle'
+        'src/Sylius/Bundle/LocaleBundle/Resources/translations': 'LocaleBundle'
+        'src/Sylius/Bundle/OrderBundle/Resources/translations': 'OrderBundle'
+        'src/Sylius/Bundle/PaymentBundle/Resources/translations': 'PaymentBundle'
+        'src/Sylius/Bundle/PayumBundle/Resources/translations': 'PayumBundle'
+        'src/Sylius/Bundle/ProductBundle/Resources/translations': 'ProductBundle'
+        'src/Sylius/Bundle/PromotionBundle/Resources/translations': 'PromotionBundle'
+        'src/Sylius/Bundle/ResourceBundle/Resources/translations': 'ResourceBundle'
+        'src/Sylius/Bundle/ReviewBundle/Resources/translations': 'ReviewBundle'
+        'src/Sylius/Bundle/ShippingBundle/Resources/translations': 'ShippingBundle'
+        'src/Sylius/Bundle/ShopBundle/Resources/translations': 'ShopBundle'
+        'src/Sylius/Bundle/TaxationBundle/Resources/translations': 'TaxationBundle'
+        'src/Sylius/Bundle/TaxonomyBundle/Resources/translations': 'TaxonomyBundle'
+        'src/Sylius/Bundle/UiBundle/Resources/translations': 'UiBundle'
+        'src/Sylius/Bundle/UserBundle/Resources/translations': 'UserBundle'
     # Optional: You can put your translations in a folder when you download archive from Crowdin.
     # Can be useful when your Crowdin project is linked to several github repositories.
-    pattern_suffix: 'Community'
+    pattern_suffix: ~
     # Optional: log the application executions in this file.
     log_file: 'app/logs/application.log'
     # Optional: translate logs. Default: 'en_US'
-    log_locale: 'fr_FR'
+    log_locale: 'en_US'

@@ -8,6 +8,8 @@ use SplFileInfo;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * This class adapts the Crowdin format to the Akeneo format:
@@ -62,8 +64,58 @@ class TranslationFilesCleaner
         $finder = new Finder();
         $translatedFiles = $finder->in($cleanerDir)->files();
 
+        /** @var SplFileInfo $file */
         foreach ($translatedFiles as $file) {
             $this->cleanCrowdinYamlTranslation($file);
+
+            $indent = null;
+            $lines = file($file->getRealPath());
+            foreach ($lines as $key => $line) {
+                if ((bool) preg_match('/^\s*null\s*$/', $line)) {
+                    unset($lines[$key]);
+                    continue;
+                }
+
+                if (0 === strpos($line, '#') || '' === trim($line)) {
+                    unset($lines[$key]);
+                    continue;
+                }
+
+                if (null === $indent && 0 === strpos($line, ' ')) {
+                    $matches = null;
+                    preg_match('/^(?P<indent>[ ]++)/', $line, $matches);
+                    $indent = strlen($matches['indent']);
+                }
+
+                if (null !== $indent) {
+                    $length = strlen($line) - strlen(ltrim($line));
+
+                    $lines[$key] = str_replace(
+                        str_repeat(' ', $length),
+                        str_repeat(' ', 4 * (int) floor($length / $indent)),
+                        $line
+                    );
+                }
+
+                $lines[$key] = rtrim($lines[$key]);
+            }
+
+            $fileContent = implode("\n", $lines) . "\n";
+
+            if ('' === trim($fileContent)) {
+                unlink($file->getRealPath());
+                continue;
+            }
+
+            $fileContent =
+                "# This file is part of the Sylius package.\n" .
+                "# (c) Paweł Jędrzejewski\n" .
+                "\n" .
+                $fileContent
+            ;
+
+            file_put_contents($file->getRealPath(), $fileContent);
+
             $this->renameTranslation($file, $localeMap);
         }
     }
@@ -133,7 +185,7 @@ class TranslationFilesCleaner
 
             $this->eventDispatcher->dispatch(Events::NELSON_RENAME, new GenericEvent($this, [
                 'from' => $file,
-                'to'   => $target
+                'to'   => $target,
             ]));
 
             rename($file, $target);
@@ -184,7 +236,7 @@ class TranslationFilesCleaner
                 ));
             } else {
                 $this->eventDispatcher->dispatch(Events::NELSON_DROP_USELESS, new GenericEvent($this, [
-                    'file' => $file->getPathname()
+                    'file' => $file->getPathname(),
                 ]));
             }
         }

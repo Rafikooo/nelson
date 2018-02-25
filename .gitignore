@@ -5,3 +5,4 @@ composer.lock
 bin
 app/console
 app/logs/
+app/config.yml

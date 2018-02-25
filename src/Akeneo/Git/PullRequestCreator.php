@@ -88,7 +88,7 @@ class PullRequestCreator
 
             $this->executor->execute(sprintf('cd %s && git add .', $projectDir));
 
-            $this->executor->execute(sprintf('cd %s && git commit -m "[Crowdin] Updated translations"', $projectDir));
+            $this->executor->execute(sprintf('cd %s && git commit -m "[Translations] Updated translations from Crowdin"', $projectDir));
 
             $this->executor->execute(sprintf('cd %s && git push origin crowdin/%s', $projectDir, $branch));
 
@@ -98,8 +98,8 @@ class PullRequestCreator
                 [
                     'head'  => sprintf('%s:crowdin/%s', $this->fork_owner, $branch),
                     'base'  => $baseBranch,
-                    'title' => 'Update translations from nelson',
-                    'body'  => 'Updated on ' . $branch,
+                    'title' => sprintf('[AUTO] Updated translations from Crowdin (%s)', $baseBranch),
+                    'body'  => '',
                 ]
             );
 
@@ -130,7 +130,7 @@ class PullRequestCreator
         foreach ($commands as $command) {
             $result = $this->executor->execute($command, true);
             $matches = null;
-            preg_match('/^(?P<diff>\d+)\\n$/', $result[0], $matches);
+            preg_match('/(?P<diff>\d++)/', $result[0], $matches);
             $diff += intval($matches['diff']);
         }
 
