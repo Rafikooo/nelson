@@ -68,10 +68,10 @@ class TranslationFile
         $filename = '%file_name%.';
 
         $matches = null;
-        if (preg_match('/^(?P<filename>[\w\+\-]+\.)[A-Za-z]{2}.\w+$/', $baseName, $matches)) {
+        if (preg_match('/^(?P<filename>[\w\+\-]+\.)[A-Za-z_]{2,5}\.\w+$/', $baseName, $matches)) {
             // If filename looks like 'translations.en.yml', it generates a pattern to remove the 'en' part.
             $filename = $matches['filename'];
-        } elseif (preg_match('/^[A-Za-z]{2}.\w+$/', $baseName, $matches)) {
+        } elseif (preg_match('/^[A-Za-z_]{2,5}.\w+$/', $baseName, $matches)) {
             // If filename looks like 'en.yml', generates a pattern to remove all but locale.
             $filename = '';
         }
