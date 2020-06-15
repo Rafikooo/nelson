@@ -183,6 +183,8 @@ class TranslationFilesCleaner
                 $pathInfo['extension']
             );
 
+            $target = preg_replace('/\+intl\-icu\.en\.([A-Za-z_]{2,5}\.\w+)/', '+intl-icu.$1', $target);
+
             $this->eventDispatcher->dispatch(Events::NELSON_RENAME, new GenericEvent($this, [
                 'from' => $file,
                 'to'   => $target,
