@@ -109,7 +109,7 @@ class TranslationFilesCleaner
 
             $fileContent =
                 "# This file is part of the Sylius package.\n" .
-                "# (c) Paweł Jędrzejewski\n" .
+                "# (c) Sylius Sp. z o.o.\n" .
                 "\n" .
                 $fileContent
             ;
