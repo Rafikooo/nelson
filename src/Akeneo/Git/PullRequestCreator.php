@@ -74,7 +74,7 @@ class PullRequestCreator
         $branch = $this->getBranchName($baseBranch);
 
         if (null === $baseBranch) {
-            $baseBranch = 'master';
+            $baseBranch = '1.13';
         }
 
         $this->eventDispatcher->dispatch(Events::PRE_GITHUB_CREATE_PR, new GenericEvent($this, [
@@ -105,7 +105,7 @@ class PullRequestCreator
 
             $this->executor->execute(sprintf('cd %s/ && rm -rf *.zip', $baseDir));
 
-            $this->executor->execute(sprintf('cd %s && ' . 'git checkout master', $projectDir));
+            $this->executor->execute(sprintf('cd %s && ' . 'git checkout 1.13', $projectDir));
         }
 
         $this->eventDispatcher->dispatch(Events::POST_GITHUB_CREATE_PR);
